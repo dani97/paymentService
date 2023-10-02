@@ -1,0 +1,43 @@
+{
+    "meshConfig": {
+        "sources": [
+            {
+                "name": "commerceGraphql",
+                "handler": {
+                    "graphql": {
+                        "endpoint": "https://app.magento.test/graphql",
+                        "operationHeaders": {
+                            "Authorization": "{context.headers['authorization']}"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "stripe",
+                "transforms": [
+                    {
+                        "prefix": {
+                            "value": "stripe_",
+                            "includeRootOperations": true
+                        }
+                    }
+                ],
+                "handler": {
+                    "openapi": {
+                        "source": "https://raw.githubusercontent.com/stripe/openapi/master/openapi/spec3.json",
+                        "operationHeaders": {
+                            "Authorization": "Bearer sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+                        }
+                    }
+                }
+            }
+        ],
+        "responseConfig": {
+            "includeHTTPDetails" : true
+        },
+        "additionalTypeDefs": "extend type SetPaymentMethodOnCartOutput { order_number: String }",
+        "additionalResolvers": [
+            "./paymentResolver.js"
+        ]
+    }
+}
